@@ -1,38 +1,218 @@
-# create-svelte
+#  CURD OPERATION USING SVELTE
+Curd Operation using svelte
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte);
+- 1. Setup Api in xampp
+    - extract file /phpapifiles/apidemo.zip
+    - create database with name `apidemo`
+        - if you have another name then you must change the file inside apidemo/app/conf/appconf.php
+    - copy `apidemo` folder into htdocs folder
+    - browser and check it working fine or not links is following:
+        - http://localhost/apidemo/
 
-## Creating a project
+- 2. Work on Project
 
-If you're seeing this, you've probably already done this step. Congrats!
 
-```bash
-# create a new project in the current directory
-npm init svelte@next
+## Create Layout
 
-# create a new project in my-app
-npm init svelte@next my-app
+- routes/__layout.svelte file code
+
+```
+<slot></slot>
 ```
 
-> Note: the `@next` is temporary
+- routes/index.svelte file code
 
-## Developing
+```
+<script>
+  import {
+    Col,
+    Container,
+    Row,
+    FormGroup,
+    Input,
+    Alert,
+    Label,
+    Button,
+  } from "sveltestrap";
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+  let succmsg = "";
+  let errmsg = "";
+  const handleSubmit = async (e) => {
+    let stname = document.getElementById("stname").value;
+    let stemail = document.getElementById("stemail").value;
+    let stmobile = document.getElementById("stmobile").value;
+    let ststate = document.getElementById("ststate").value;
+    let stcity = document.getElementById("stcity").value;
+    let stfile = document.getElementById("photo").files[0];
 
-```bash
-npm run dev
+    const data = new FormData();
+    data.append("uname", stname);
+    data.append("email", stemail);
+    data.append("mobileno", stmobile);
+    data.append("state", ststate);
+    data.append("city", stcity);
+    data.append("propic", stfile);
+    data.append("token", "anythings");
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+    const upload = fetch("http://localhost/apidemo/v1/create/", {
+      method: "POST",
+      body: data,
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        console.log("Success:", result);
+
+        if (result.status == 1) {
+          succmsg = result.data.msg;
+          document.querySelector('form').reset();
+        } else {
+          if (result.error.hasOwnProperty("uname")) {
+            if (errmsg != "") errmsg += "<br>";
+            errmsg += result.error.uname;
+          }
+
+          if (result.error.hasOwnProperty("mobileno")) {
+            if (errmsg != "") errmsg += "<br>";
+            errmsg += result.error.mobileno;
+          }
+
+          if (result.error.hasOwnProperty("email")) {
+            if (errmsg != "") errmsg += "<br>";
+            errmsg += result.error.email;
+          }
+
+          if (result.error.hasOwnProperty("propic")) {
+            if (errmsg != "") errmsg += "<br>";
+            errmsg += result.error.propic;
+          }
+
+          if (result.error.hasOwnProperty("msg")) {
+            if (errmsg != "") errmsg += "<br>";
+            errmsg += result.error.msg;
+          }
+        }
+
+        
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        errmsg = error;
+      });
+  };
+</script>
+
+<form
+  on:submit|preventDefault={handleSubmit}
+  method="post"
+  enctype="multipart/form-data"
+>
+  <Container class="mt-5">
+    <Row>
+        <Col>
+            <h1>Add Student</h1>
+        </Col>
+    </Row>
+    <Row>
+      <Col>
+        {#if succmsg != ""}
+          <Alert color="success" dismissible>
+            {succmsg}
+          </Alert>
+        {/if}
+
+        {#if errmsg != ""}
+          <Alert color="danger" dismissible>
+            {errmsg}
+          </Alert>
+        {/if}
+      </Col>
+    </Row>
+    <Row cols={2}>
+      <Col>
+        <FormGroup>
+          <Label for="stname">Name</Label>
+          <Input
+            type="text"
+            name="stname"
+            id="stname"
+            placeholder="Name"
+            maxlength="20"
+          />
+        </FormGroup>
+      </Col>
+      <Col>
+        <FormGroup>
+          <Label for="stemail">E-Mail Address</Label>
+          <Input
+            type="text"
+            name="stemail"
+            id="stemail"
+            placeholder="E-Mail Address"
+            maxlength="250"
+          />
+        </FormGroup>
+      </Col>
+      <Col>
+        <FormGroup>
+          <Label for="stmobile">Mobile No.</Label>
+          <Input
+            type="number"
+            name="stmobile"
+            id="stmobile"
+            placeholder="Mobile No."
+            maxlength="10"
+          />
+        </FormGroup>
+      </Col>
+
+      <Col>
+        <FormGroup>
+          <Label for="ststate">State</Label>
+          <Input
+            type="text"
+            name="ststate"
+            placeholder="State"
+            id="ststate"
+            maxlength="50"
+          />
+        </FormGroup>
+      </Col>
+      <Col>
+        <FormGroup>
+          <Label for="stcity">City</Label>
+          <Input
+            type="text"
+            name="stcity"
+            placeholder="City"
+            id="stcity"
+            maxlength="50"
+          />
+        </FormGroup>
+      </Col>
+      <Col>
+        <FormGroup>
+          <Label for="photo">Photo</Label>
+          <Input type="file" name="photo" id="photo" accept="image/*" />
+        </FormGroup>
+      </Col>
+    </Row>
+    <Row
+      ><Col class="text-center">
+        <Button type="submit" color="primary">Submit</Button>
+        <Button type="button" color="dark">View Data</Button>
+      </Col></Row
+    >
+  </Container>
+</form>
 ```
 
-## Building
+## How to run Project
 
-Before creating a production version of your app, install an [adapter](https://kit.svelte.dev/docs#adapters) for your target environment. Then:
-
-```bash
-npm run build
-```
-
-> You can preview the built app with `npm run preview`, regardless of whether you installed an adapter. This should _not_ be used to serve your app in production.
+- First, Clone the repo.
+- install required file for following:
+    - npm install
+- install bootstrap follow the docs
+    - https://sveltestrap.js.org/?path=/story/components--get-started
+- run command
+    - npm run dev
+- Goto Browser and type http://localhost:5000
