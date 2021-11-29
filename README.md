@@ -24,16 +24,7 @@ Curd Operation using svelte
 
 ```
 <script>
-  import {
-    Col,
-    Container,
-    Row,
-    FormGroup,
-    Input,
-    Alert,
-    Label,
-    Button,
-  } from "sveltestrap";
+  import { Col, Container, Row, FormGroup, Input, Alert, Label, Button, } from "sveltestrap";
 
   let succmsg = "";
   let errmsg = "";
@@ -101,11 +92,7 @@ Curd Operation using svelte
   };
 </script>
 
-<form
-  on:submit|preventDefault={handleSubmit}
-  method="post"
-  enctype="multipart/form-data"
->
+<form on:submit|preventDefault={handleSubmit} method="post" enctype="multipart/form-data" >
   <Container class="mt-5">
     <Row>
         <Col>
