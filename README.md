@@ -1,7 +1,7 @@
 #  CURD OPERATION USING SVELTE
 Curd Operation using svelte
 
-- 1. Setup Api in xampp
+# Setup Api in xampp
     - extract file /phpapifiles/apidemo.zip
     - create database with name `apidemo`
         - if you have another name then you must change the file inside apidemo/app/conf/appconf.php
@@ -9,7 +9,7 @@ Curd Operation using svelte
     - browser and check it working fine or not links is following:
         - http://localhost/apidemo/
 
-- 2. Work on Project
+# Work on Project
 
 
 ## Create Layout
