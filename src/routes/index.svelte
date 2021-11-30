@@ -174,8 +174,15 @@
     <Row
       ><Col class="text-center">
         <Button type="submit" color="primary">Submit</Button>
-        <Button type="button" color="dark">View Data</Button>
+        <Button type="button" color="dark"><a href="/view">View Data</a></Button>
       </Col></Row
     >
   </Container>
 </form>
+
+<style>
+  a {
+    text-decoration: none;
+    color: #fff;
+  }
+</style>
