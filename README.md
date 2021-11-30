@@ -383,8 +383,6 @@ const loaddc = async () => {
 - First, Clone the repo.
 - install required file for following:
     - npm install
-- install bootstrap follow the docs
-    - https://sveltestrap.js.org/?path=/story/components--get-started
 - run command
     - npm run dev
 - Goto Browser and type http://localhost:5000
